@@ -46,8 +46,6 @@ public class SparseArray {
 		
 		System.out.println();
 		
-		
-		
 		for (int i = 0; i < sparseArr.length; i++) {
 			System.out.printf("%d\t%d\t%d\t\n", sparseArr[i][0],sparseArr[i][1],sparseArr[i][2]);
 		}

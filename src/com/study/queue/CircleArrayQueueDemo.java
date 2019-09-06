@@ -2,10 +2,9 @@ package com.study.queue;
 
 import java.util.Scanner;
 
-public class ArrayQueueDemo {
-
+public class CircleArrayQueueDemo {
 	public static void main(String[] args) {
-		ArrayQueue arrayQueue = new ArrayQueue(3);
+		CircleArray arrayQueue = new CircleArray(4);
 		char key = ' ';
 		Scanner scanner = new Scanner(System.in);
 		boolean loop = true;
@@ -48,32 +47,27 @@ public class ArrayQueueDemo {
 			default:
 				break;
 			}
-
-			System.out.println("程序退出");
-
 		}
+		System.out.println("程序退出");
 	}
 
 }
 
-class ArrayQueue {
+class CircleArray {
+
 	private int maxSize;
-	private int front;
-	private int rear;
+	private int front; // 指向队列的第一个元素
+	private int rear; // 指向队列的最后一个元素的后一个位置
 	private int[] arr;
 
-	// 创建队列
-
-	public ArrayQueue(int arrMaxSize) {
+	public CircleArray(int arrMaxSize) {
 		maxSize = arrMaxSize;
 		arr = new int[maxSize];
-		front = -1;
-		rear = -1;
 	}
 
 	// 判断队列是否满
 	public boolean isFull() {
-		return rear == maxSize - 1;
+		return (rear + 1) % maxSize == front;
 	}
 
 	// 判断队列是否为空
@@ -87,18 +81,19 @@ class ArrayQueue {
 			System.out.println("队列满，不能加入数据");
 			return;
 		}
-
-		arr[++rear] = n;
+		arr[rear] = n;
+		rear = (rear + 1) % maxSize;
 	}
 
 	// 数据出队列
-
 	public int getQueue() {
 		if (isEmpty()) {
 			throw new RuntimeException("队列为空");
 		}
-		front++;
-		return arr[front];
+
+		int value = arr[front];
+		front = (front + 1) % maxSize;
+		return value;
 	}
 
 	// 遍历数据
@@ -107,17 +102,23 @@ class ArrayQueue {
 			System.out.println("队列为空，木有数据");
 			return;
 		}
-		for (int i = 0; i < arr.length; i++) {
-			System.out.printf("arr[%d]=%d\n", i, arr[i]);
+		for (int i = front; i < front + size(); i++) {
+			System.out.printf("arr[%d]=%d\n", i % maxSize, arr[i % maxSize]);
 		}
 	}
-
+	
 	// 显示队列头数据
-	public int headQueue() {
-		if (isEmpty()) {
-			throw new RuntimeException("队列为空没有数据");
+		public int headQueue() {
+			if (isEmpty()) {
+				throw new RuntimeException("队列为空没有数据");
+			}
+			return arr[front + 1];
 		}
-		return arr[front + 1];
+	
+
+	// 求出当前有效数据的个数
+	public int size() {
+		return (rear + maxSize - front) % maxSize;
 	}
 
 }
